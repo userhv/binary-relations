@@ -1,1 +1,2 @@
-Um arquivo leiame.txt, a ser incluído no arquivo zip, como informações sobre o ambiente computacional para executar o seu TP bem como todas as instruções necessárias.
+Um arquivo leiame.txt, a ser incluído no arquivo zip, como informações 
+sobre o ambiente computacional para executar o seu TP bem como todas as instruções necessárias.

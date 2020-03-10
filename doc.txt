@@ -3,4 +3,4 @@ chegar à solução do problema, incluindo a descrição do projeto das estrutur
 • Uma análise de complexidade de pior caso usando a notação assintótica apropriada tanto para o custo
 de tempo quanto de espaço.
 
- -------- Patch Note ------------
+ --------- Patch Note -------------
