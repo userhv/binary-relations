@@ -9,6 +9,7 @@
     - Corrigir a função "transitiva" e sua impressão no main
     - O algoritmo precisa ser otimizado
     - O algoritmo precisa ser sintetizado
+    - beta.7
 */
 
 int** aloc_int(int num_ln)
