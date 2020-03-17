@@ -9,7 +9,7 @@ struct ordenados par;
 
 int** aloc_int(int num_ln);
 void free_aloc_int(int** free_int, int tam_int);
-int** number_ln(FILE* arc, int* size);
+int** rlc_binary(FILE* arc, int* size);
 char reflexiva(int** matriz_complete, int line);
 char irreflexiva(char rpt_reflexiva);
 char simetrica(int** matriz_complete, int line, char resposta_flexiva);

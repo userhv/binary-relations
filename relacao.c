@@ -36,22 +36,21 @@ void free_aloc_int(int** free_int, int tam_int)
   }
 
 /*Essa função recebe a matriz alocada*/
-int** number_ln(FILE* arc, int* size){
+int** rlc_binary(FILE* arc, int* size){
     int numbers_arc[MAX];
     int i = 0, init, linha_new,count;
-    int** matriz_aloc;
+    int** matriz_aloc = NULL;
     rewind(arc);
     if (arc == NULL)
       {
         printf("!!!!ERROR!!!!\n");
         exit;
       }
-
     while(!feof(arc))
       {
         fscanf(arc, "%d",&numbers_arc[i]); 
         i++;      
-      }
+      }    
     linha_new = i - 1;
     init = numbers_arc[0];
     *size = init;
@@ -147,18 +146,18 @@ char simetrica(int** matriz_complete, int line, char resposta_flexiva)
     else if(resposta_flexiva == 'V'){
       for(int i = 0; i <= line; i++){
         for(int j = 1; j <= line; j++){
-          if(matriz_complete[i][j] == 1 && matriz_complete[j][i] == 1 && i != j){
+          if((matriz_complete[i][j] !=  matriz_complete[j][i]) == 1 && i != j){
             contador++;
           }
 
         }
       }
     }
-    if(line*2 == contador){
-      return resposta = 'V';
-    }
-    else if(line*2 != contador) {
+    if(contador != 0){
       return resposta = 'F';
+    }
+    else {
+      return resposta = 'V';
     }
   }
 char anti_simetrica(int** matriz_complete,int line,char resposta_reflexiva)
@@ -168,7 +167,7 @@ char anti_simetrica(int** matriz_complete,int line,char resposta_reflexiva)
     if(resposta_reflexiva == 'V'){
       for(int i = 1; i <= line; i++){
         for(int j = 1; j <= line; j++){
-          if ((matriz_complete[i][j] || (matriz_complete[j][i]) == 0) && (i != j)){
+          if (matriz_complete[i][j] == 0 && matriz_complete[j][i] == 0 && i != j){
             contador++;
           }
 
@@ -179,11 +178,11 @@ char anti_simetrica(int** matriz_complete,int line,char resposta_reflexiva)
       {
         return resposta = 'F';
       }
-    if(line*2 == contador)
+    if(contador == 0)
       {
         return resposta = 'V';
       }
-    else if (line*2 != contador)
+    else if (contador != 0)
       {
         return resposta = 'F';
       }
@@ -201,7 +200,6 @@ char assimetrica(char resposta_reflexiva,char resposta_anti_simetrica)
     }    
   }
 
-
 char transitiva(int** matriz_complete,int line)
   {
     char resposta;
@@ -209,19 +207,17 @@ char transitiva(int** matriz_complete,int line)
     for(int z = 1; z <= line; z++){
       for(int i = 1; i <= line; i++){
         for(int j = 1; j <= line; j++){
-          if(matriz_complete[i][j] == 1 && matriz_complete[j][z] == 1 && matriz_complete[i][z] == 1){
+          if(matriz_complete[i][j] == 1 && matriz_complete[j][z] == 1 && matriz_complete[i][z] != 1){
             contador++;
-            //printf(" (%d, %d), (%d, %d), (%d, %d); ",matriz_complete[i][0],matriz_complete[0][j],matriz_complete[j][0],matriz_complete[0][z], matriz_complete[i][0],matriz_complete[0][z]);
-            //printf("\n");
           }
         }
       }
     }
-    if(contador == line*9){
-      return resposta = 'V';
-    }
-    else 
+    if(contador != 0){
       return resposta = 'F';
+    }
+    else
+      return resposta = 'V';
   }
 char fecho_transitivo(char resposta_transitiva)
   {
@@ -239,13 +235,13 @@ char fecho_transitivo(char resposta_transitiva)
 //--------------- FUNÇÃO PRINCIPAL -------------------//
  
 int main(int argc, char* argv[ ]){                        
-    int** matriz_int_aloc;
+    int** matriz_int_aloc = NULL;
     int linhas;
     char rpt_reflexiva, rpt_irreflexiva, rpt_simetrica, rpt_anti_simetrica, rpt_assimetrica, rpt_transitiva,rpt_fecho;
     FILE *arq;
     arq = fopen(argv[1],"r");
     
-    matriz_int_aloc = number_ln(arq, &linhas);
+    matriz_int_aloc = rlc_binary(arq, &linhas);
     printf("Propriedades:\n");
     rpt_reflexiva = reflexiva(matriz_int_aloc,linhas);
     if(rpt_reflexiva == 'V')
@@ -352,13 +348,13 @@ int main(int argc, char* argv[ ]){
         printf("6. Transitiva: F\n");
         for(int z = 1; z <= linhas; z++)
           {
-            for(int i = 1; i <= z; i++)
+            for(int i = 1; i <= linhas; i++)
               {
-                for(int j = 1; j <= i; j++)
+                for(int j = 1; j <= linhas; j++)
                 {
-                  if(matriz_int_aloc[i][j] == 0 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
+                  if(matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
                     {
-                     // printf(" (%d, %d) ; ",matriz_int_aloc[i][0],matriz_int_aloc[0][z]);
+                     printf(" (%d, %d) ; ",matriz_int_aloc[i][0],matriz_int_aloc[0][z]);
                     }
                 }  
               }
