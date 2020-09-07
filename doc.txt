@@ -1,6 +1,0 @@
-• Uma documentação mínima que explique como você projetou sua solução, ou seja, as ideias para
-chegar à solução do problema, incluindo a descrição do projeto das estruturas de dados.
-• Uma análise de complexidade de pior caso usando a notação assintótica apropriada tanto para o custo
-de tempo quanto de espaço.
-
- --------- Patch Note -------------
