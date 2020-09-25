@@ -1,6 +1,7 @@
     O TP foi testado e desenvolvido sob uma distribuição linux (Fedora 32) e com isso tem suporte ao sistema yum.
     Além do arquivo "relacao.c" está incluido também a biblioteca "libmd.h", certifique-se de que os arquivos estejam todos na
 mesma pasta, caso contrário sem a biblioteca "libmd.h" o código não irá compilar.
+    A passagem do arquivo deve ser feita na hora de executar o codigo na linha de comando, tenha-se: ./meuprograma nomedoarquivo.txt
 
     O algoritmo é totalmente alocado dinamicamente e tem suporte para receber até 50 pares ordenados (uma matriz 50x50), ou seja, o primeiro número 
 passado no arquivo com o tamanho deve ser de no máximo 50, maior que isso o programa poderá ter comportamento inesperado. Caso queira
