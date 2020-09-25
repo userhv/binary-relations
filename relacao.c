@@ -3,12 +3,6 @@
 #include "libmd.h"
 #define MAX 3000
 
-/* INSTALLABLE VERSION :
-  PATCH NOTES:
-    - beta.15
-    - Função antisimetrica e fecho transitivo estão corretos mas posso melhorar e deixar a saida igual os exemplos
-    - Necessário verificar o tempo gasto para rodar
-*/
 
 int **aloc_int(int num_ln)
 {
@@ -34,7 +28,7 @@ void free_aloc_int(int **free_int, int tam_int)
   free(free_int);
 }
 
-/*Essa função recebe a matriz alocada*/
+/*Função principal do algoritmo*/
 int **rlc_binary(FILE *arc, int *size)
 {
   int numbers_arc[MAX] = {};
@@ -118,7 +112,7 @@ int **rlc_binary(FILE *arc, int *size)
   return matriz_aloc;
 }
 
-/*TODAS AS FUNÇÕES E SUAS PROPRIEDADES*/
+/*TODAS AS RELAÇÕES*/
 char reflexiva(int **matriz_complete, int line)
 {
   char resposta = ' ';
@@ -211,10 +205,10 @@ char anti_simetrica(int **matriz_complete, int line)
     return resposta = 'V';
   }
 }
-char assimetrica(char resposta_reflexiva, char resposta_anti_simetrica)
+char assimetrica(char resposta_irreflexiva, char resposta_anti_simetrica)
 {
   char resposta;
-  if (resposta_reflexiva == 'F' && resposta_anti_simetrica == 'F')
+  if (resposta_irreflexiva == 'V' && resposta_anti_simetrica == 'V')
   {
     return resposta = 'V';
   }
@@ -343,7 +337,7 @@ int main(int argc, char *argv[])
     printf("\n");
   }
 
-  rpt_assimetrica = assimetrica(rpt_reflexiva, rpt_anti_simetrica);
+  rpt_assimetrica = assimetrica(rpt_irreflexiva, rpt_anti_simetrica);
   if (rpt_assimetrica == 'V')
   {
     printf("Assimétrica: V\n");
@@ -362,19 +356,28 @@ int main(int argc, char *argv[])
   else if (rpt_transitiva == 'F')
   {
     printf("Transitiva: F\n");
-    for (int i = 1; i <= linhas; i++)
+    for (int z = 1; z <= linhas; z++)
     {
-      for (int j = 1; j <= linhas; j++)
+      for (int i = 1; i <= linhas; i++)
       {
-        for (int z = 1; z <= linhas; z++)
+        for (int j = 1; j <= linhas; j++)
         {
           if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
           {
-            if (vetorAuxTran[0] != matriz_int_aloc[i][0] && vetorAuxTran[1] != matriz_int_aloc[0][z])
+            if (vetorAuxTran[0] != matriz_int_aloc[i][0])
             {
               printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
               vetorAuxTran[0] = matriz_int_aloc[i][0];
               vetorAuxTran[1] = matriz_int_aloc[0][z];
+            }
+            else if (vetorAuxTran[0] == matriz_int_aloc[i][0])
+            {
+              if (vetorAuxTran[1] != matriz_int_aloc[0][z])
+              {
+                printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
+                vetorAuxTran[0] = matriz_int_aloc[i][0];
+                vetorAuxTran[1] = matriz_int_aloc[0][z];
+              }
             }
           }
         }
@@ -393,44 +396,46 @@ int main(int argc, char *argv[])
     printf("Relação de ordem parcial: F\n");
 
   printf("Fecho transitivo da relação: ");
-  if (rpt_transitiva == 'V')
+  for (int i = 1; i <= linhas; i++)
   {
-    for (int i = 1; i <= linhas; i++)
+    for (int j = 1; j <= linhas; j++)
     {
-      for (int j = 1; j <= linhas; j++)
+      if (matriz_int_aloc[i][j] == 1)
       {
-        if (matriz_int_aloc[i][j] == 1)
-        {
-          printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
+        printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
       }
     }
   }
-  else if (rpt_transitiva == 'F')
-  { 
+
+  if (rpt_transitiva == 'F')
+  {
     vetorAuxTran[0] = 0;
     vetorAuxTran[1] = 0;
-    for (int i = 1; i <= linhas; i++)
+    for (int z = 1; z <= linhas; z++)
     {
-      for (int j = 1; j <= linhas; j++)
+      for (int i = 1; i <= linhas; i++)
       {
-        if (matriz_int_aloc[i][j] == 1)
-        {
-          printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
-        for (int z = 1; z <= linhas; z++)
+        for (int j = 1; j <= linhas; j++)
         {
           if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
           {
-            if (vetorAuxTran[0] != matriz_int_aloc[i][0] && vetorAuxTran[1] != matriz_int_aloc[0][z])
+            if (vetorAuxTran[0] != matriz_int_aloc[i][0])
             {
               printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
               vetorAuxTran[0] = matriz_int_aloc[i][0];
               vetorAuxTran[1] = matriz_int_aloc[0][z];
             }
+            else if (vetorAuxTran[0] == matriz_int_aloc[i][0])
+            {
+              if (vetorAuxTran[1] != matriz_int_aloc[0][z])
+              {
+                printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
+                vetorAuxTran[0] = matriz_int_aloc[i][0];
+                vetorAuxTran[1] = matriz_int_aloc[0][z];
+              }
+            }
           }
         }
-  
       }
     }
   }

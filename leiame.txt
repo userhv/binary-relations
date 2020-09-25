@@ -1,7 +1,6 @@
     O TP foi testado e desenvolvido sob uma distribuição linux (Fedora 32) e com isso tem suporte ao sistema yum.
-    Para executar o codigo-fonte "relacao.c" é necessário seguir as instruções:
-        Compilar: gcc relacao.c -o meuprograma
-        Executar: ./meuprograma nomedoarquivo.txt
+    Além do arquivo "relacao.c" está incluido também a biblioteca "libmd.h", certifique-se de que os arquivos estejam todos na
+mesma pasta, caso contrário sem a biblioteca "libmd.h" o código não irá compilar.
 
     O algoritmo é totalmente alocado dinamicamente e tem suporte para receber até 50 pares ordenados (uma matriz 50x50), ou seja, o primeiro número 
 passado no arquivo com o tamanho deve ser de no máximo 50, maior que isso o programa poderá ter comportamento inesperado. Caso queira
