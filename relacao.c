@@ -3,7 +3,6 @@
 #include "libmd.h"
 #define MAX 3000
 
-
 int **aloc_int(int num_ln)
 {
   int **mat_aloc;
@@ -336,7 +335,6 @@ int main(int argc, char *argv[])
     }
     printf("\n");
   }
-
   rpt_assimetrica = assimetrica(rpt_irreflexiva, rpt_anti_simetrica);
   if (rpt_assimetrica == 'V')
   {
@@ -384,6 +382,21 @@ int main(int argc, char *argv[])
       }
     }
     printf("\n");
+    /* Como ela nao é transitiva, na impressão do fecho precisamos considerar elas,
+        além do que será analisado no fecho*/
+    for (int z = 1; z <= linhas; z++)
+    {
+      for (int i = 1; i <= linhas; i++)
+      {
+        for (int j = 1; j <= linhas; j++)
+        {
+          if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
+          {
+            matriz_int_aloc[i][z] = 1;
+          }
+        }
+      }
+    }
   }
   if (rpt_reflexiva == 'V' && rpt_transitiva == 'V' && rpt_simetrica == 'V')
     printf("Relação de equivalência: V\n");
@@ -440,7 +453,6 @@ int main(int argc, char *argv[])
     }
   }
   printf("\n");
-
   fclose(arq);
   free_aloc_int(matriz_int_aloc, linhas);
   return 0;
