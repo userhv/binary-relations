@@ -2,18 +2,8 @@
     Além do arquivo "relacao.c" está incluido também a biblioteca "libmd.h", certifique-se de que os arquivos estejam todos na
 mesma pasta, caso contrário sem a biblioteca "libmd.h" o código não irá compilar.
     A passagem do arquivo deve ser feita na hora de executar o codigo na linha de comando, tenha-se: ./meuprograma nomedoarquivo.txt
-
-    O algoritmo é totalmente alocado dinamicamente e tem suporte para receber até 50 pares ordenados (uma matriz 50x50), ou seja, o primeiro número 
-passado no arquivo com o tamanho deve ser de no máximo 50, maior que isso o programa poderá ter comportamento inesperado. Caso queira
-expandir esse limite é necessario alterar o valor de,
-    #define MAX 3000
-no cabeçalho do codigo-fonte. Note que para alterá-lo você precisa saber quantos números serão passados no seu arquivo no total, isso 
-significa, a quantidade de números passados na primeira linha do arquivo + a quantidade de numeros passados nos pares ordenados.
-    Um exemplo a seguir:
-3 1 2 3
-1 2
-2 2
-3 3
-    Nesse caso foram passados 10 números, como meu MAX suporta até 3000 números, temos suporte para esse problema.
-    Casos que contenham mais de 3000 números passados no arquivo de teste não foram testados.
-
+    O algoritmo foi testado com no máximo 340 pares retornados no fecho transitivo, para além disso é necessário alterar
+        #define MAX 
+com um valor suficientemente grande que consiga comportar a seguinte operação: 2*(n²+n) onde n é o primeiro valor passado
+nos casos de teste.
+    Obs: Por uma questão de otimização os pares podem não estar em ordem.

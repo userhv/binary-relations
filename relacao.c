@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "libmd.h"
-#define MAX 3000
+#define MAX 5050
 
 int **aloc_int(int num_ln)
 {
@@ -58,27 +58,23 @@ int **rlc_binary(FILE *arc, int *size)
   matriz_aloc[0][0] = 0;
   count = init + 1;
   int size_new = (pos - 1) - (numbers_arc[0] + 1);
-  int *vetor_aux = NULL, *par_eixo_x = NULL, *par_eixo_y = NULL;
-  vetor_aux = (int *)calloc(size_new + 2, sizeof(int));
+  int *par_eixo_x = NULL, *par_eixo_y = NULL;
   par_eixo_x = (int *)calloc(size_new + 2, sizeof(int));
   par_eixo_y = (int *)calloc(size_new + 2, sizeof(int));
-  for (int i = 0; i <= size_new; i++)
-  {
-    vetor_aux[i] = numbers_arc[count];
-    count++;
-  }
 
   int pos_x = 0, pos_y = 0;
   for (int i = 0; i <= size_new; i++)
   {
     if (i % 2 == 0)
     {
-      par_eixo_x[pos_x] = vetor_aux[i];
+      par_eixo_x[pos_x] = numbers_arc[count];
+      count++;
       pos_x++;
     }
     else
     {
-      par_eixo_y[pos_y] = vetor_aux[i];
+      par_eixo_y[pos_y] = numbers_arc[count];
+      count++;
       pos_y++;
     }
   }
@@ -104,18 +100,16 @@ int **rlc_binary(FILE *arc, int *size)
       }
     }
   }
-
   free(par_eixo_x);
   free(par_eixo_y);
-  free(vetor_aux);
   return matriz_aloc;
 }
 
 /*TODAS AS RELAÇÕES*/
-char reflexiva(int **matriz_complete, int line)
+char reflexiva(int **matriz_complete, int line, int *vetor_resposta, int *tam_res)
 {
   char resposta = ' ';
-  int contador = 0;
+  int contador = 0, it_res = 0;
   for (int i = 1; i <= line; i++)
   {
     for (int j = 1; j <= line; j++)
@@ -124,8 +118,15 @@ char reflexiva(int **matriz_complete, int line)
       {
         contador++;
       }
+      else if (matriz_complete[i][j] == 0 && i == j)
+      {
+        vetor_resposta[it_res] = matriz_complete[i][0];
+        vetor_resposta[it_res + 1] = matriz_complete[0][j];
+        it_res += 2;
+      }
     }
   }
+  *tam_res = it_res;
   if (contador == line)
   {
     return resposta = 'V';
@@ -133,10 +134,10 @@ char reflexiva(int **matriz_complete, int line)
   else
     return resposta = 'F';
 }
-char irreflexiva(int **matriz_complete, int line)
+char irreflexiva(int **matriz_complete, int line, int *vetor_resposta, int *tam_res)
 {
   char resposta = ' ';
-  int contador = 0;
+  int contador = 0, it_res = 0;
   for (int i = 1; i <= line; i++)
   {
     for (int j = 1; j <= line; j++)
@@ -145,8 +146,15 @@ char irreflexiva(int **matriz_complete, int line)
       {
         contador++;
       }
+      else if ((i == j) && (matriz_complete[i][j] == 1))
+      {
+        vetor_resposta[it_res] = matriz_complete[i][0];
+        vetor_resposta[it_res + 1] = matriz_complete[0][j];
+        it_res += 2;
+      }
     }
   }
+  *tam_res = it_res;
   if (contador == line)
   {
     return resposta = 'V';
@@ -154,10 +162,10 @@ char irreflexiva(int **matriz_complete, int line)
   else
     return resposta = 'F';
 }
-char simetrica(int **matriz_complete, int line)
+char simetrica(int **matriz_complete, int line, int *vetor_resposta, int *tam_res)
 {
   char resposta;
-  int contador = 0;
+  int contador = 0, it_res = 0;
 
   for (int i = 1; i <= line; i++)
   {
@@ -168,8 +176,15 @@ char simetrica(int **matriz_complete, int line)
       {
         contador++;
       }
+      if (matriz_complete[i][j] == 0 && matriz_complete[j][i] == 1)
+      {
+        vetor_resposta[it_res] = matriz_complete[i][0];
+        vetor_resposta[it_res + 1] = matriz_complete[0][j];
+        it_res += 2;
+      }
     }
   }
+  *tam_res = it_res;
   if (contador != 0)
   {
     return resposta = 'F';
@@ -179,10 +194,10 @@ char simetrica(int **matriz_complete, int line)
     return resposta = 'V';
   }
 }
-char anti_simetrica(int **matriz_complete, int line)
+char anti_simetrica(int **matriz_complete, int line, int *vetor_resposta, int *tam_res)
 {
   char resposta = ' ';
-  int contador = 0;
+  int contador = 0, it_res = 0;
 
   for (int i = 1; i <= line; i++)
   {
@@ -191,10 +206,13 @@ char anti_simetrica(int **matriz_complete, int line)
       if ((matriz_complete[i][j] == 1 && matriz_complete[j][i] == 1) && i != j)
       {
         contador++;
+        vetor_resposta[it_res] = matriz_complete[0][j];
+        vetor_resposta[it_res + 1] = matriz_complete[i][0];
+        it_res += 2;
       }
     }
   }
-
+  *tam_res = it_res;
   if (contador != 0)
   {
     return resposta = 'F';
@@ -216,10 +234,11 @@ char assimetrica(char resposta_irreflexiva, char resposta_anti_simetrica)
     return resposta = 'F';
   }
 }
-char transitiva(int **matriz_complete, int line)
+char transitiva(int **matriz_complete, int line, int *vetor_resposta, int *tam_res)
 {
   char resposta;
-  int contador = 0;
+  int contador = 0, it_res = 0;
+  int vetorAuxTran[2] = {0, 0};
   for (int z = 1; z <= line; z++)
   {
     for (int i = 1; i <= line; i++)
@@ -229,29 +248,76 @@ char transitiva(int **matriz_complete, int line)
         if (matriz_complete[i][j] == 1 && matriz_complete[j][z] == 1 && matriz_complete[i][z] != 1)
         {
           contador++;
+          if (vetorAuxTran[0] != matriz_complete[i][0])
+          {
+            vetor_resposta[it_res] = matriz_complete[i][0];
+            vetor_resposta[it_res + 1] = matriz_complete[0][z];
+            it_res += 2;
+            vetorAuxTran[0] = matriz_complete[i][0];
+            vetorAuxTran[1] = matriz_complete[0][z];
+          }
+          else if (vetorAuxTran[0] == matriz_complete[i][0])
+          {
+            if (vetorAuxTran[1] != matriz_complete[0][z])
+            {
+              vetor_resposta[it_res] = matriz_complete[i][0];
+              vetor_resposta[it_res + 1] = matriz_complete[0][z];
+              it_res += 2;
+              vetorAuxTran[0] = matriz_complete[i][0];
+              vetorAuxTran[1] = matriz_complete[0][z];
+            }
+          }
         }
       }
     }
   }
+  *tam_res = it_res;
   if (contador != 0)
   {
+    int count = 0;
+    for (int i = 1; i <= line; i++)
+    {
+      for (int j = 1; j <= line; j++)
+      {
+        if (matriz_complete[i][0] == vetor_resposta[count] && matriz_complete[0][j] == vetor_resposta[count + 1])
+        {
+          matriz_complete[i][j] = 1;
+          count += 2;
+        }
+        if (count >= it_res)
+        {
+          return resposta = 'F';
+        }
+      }
+    }
     return resposta = 'F';
   }
   else
+  {
     return resposta = 'V';
+  }
 }
-
+void imprimir_resposta(int *vetor_resposta, int tam_res)
+{
+  for (int i = 0; i < tam_res; i += 2)
+  {
+    printf("(%d,%d); ", vetor_resposta[i], vetor_resposta[i + 1]);
+  }
+  printf("\n");
+}
 //--------------- FUNÇÃO PRINCIPAL -------------------//
 
 int main(int argc, char *argv[])
 {
   int **matriz_int_aloc = NULL;
-  int linhas;
+  int linhas = 0, tam_res = 0;
   char rpt_reflexiva, rpt_irreflexiva, rpt_simetrica, rpt_anti_simetrica, rpt_assimetrica, rpt_transitiva, rpt_fecho;
   FILE *arq;
   arq = fopen(argv[1], "r");
   matriz_int_aloc = rlc_binary(arq, &linhas);
-  rpt_reflexiva = reflexiva(matriz_int_aloc, linhas);
+  fclose(arq);
+  int vetor_resposta[MAX] = {};
+  rpt_reflexiva = reflexiva(matriz_int_aloc, linhas, vetor_resposta, &tam_res);
   if (rpt_reflexiva == 'V')
   {
     printf("Reflexiva: V\n");
@@ -259,20 +325,10 @@ int main(int argc, char *argv[])
   else if (rpt_reflexiva == 'F')
   {
     printf("Reflexiva: F\n");
-    for (int i = 0; i <= linhas; i++)
-    {
-      for (int j = 1; j <= linhas; j++)
-      {
-        if ((i == j) && matriz_int_aloc[i][j] == 0)
-        {
-          printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
-      }
-    }
-    printf("\n");
+    imprimir_resposta(vetor_resposta, tam_res);
   }
 
-  rpt_irreflexiva = irreflexiva(matriz_int_aloc, linhas);
+  rpt_irreflexiva = irreflexiva(matriz_int_aloc, linhas, vetor_resposta, &tam_res);
   if (rpt_irreflexiva == 'V')
   {
     printf("Irreflexiva: V\n");
@@ -280,41 +336,21 @@ int main(int argc, char *argv[])
   else if (rpt_irreflexiva == 'F')
   {
     printf("Irreflexiva: F\n");
-    for (int i = 0; i <= linhas; i++)
-    {
-      for (int j = 1; j <= linhas; j++)
-      {
-        if ((i == j) && matriz_int_aloc[i][j] == 1)
-        {
-          printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
-      }
-    }
-    printf("\n");
+    imprimir_resposta(vetor_resposta, tam_res);
   }
 
-  rpt_simetrica = simetrica(matriz_int_aloc, linhas);
+  rpt_simetrica = simetrica(matriz_int_aloc, linhas, vetor_resposta, &tam_res);
   if (rpt_simetrica == 'V')
   {
-    printf("Simetrica: V\n");
+    printf("Simétrica: V\n");
   }
   else if (rpt_simetrica == 'F')
   {
-    printf("Simetrica: F\n");
-    for (int i = 1; i <= linhas; i++)
-    {
-      for (int j = 1; j <= linhas; j++)
-      {
-        if ((matriz_int_aloc[i][j] == 0 && matriz_int_aloc[j][i] == 1))
-        {
-          printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
-      }
-    }
-    printf("\n");
+    printf("Simétrica: F\n");
+    imprimir_resposta(vetor_resposta, tam_res);
   }
 
-  rpt_anti_simetrica = anti_simetrica(matriz_int_aloc, linhas);
+  rpt_anti_simetrica = anti_simetrica(matriz_int_aloc, linhas, vetor_resposta, &tam_res);
   if (rpt_anti_simetrica == 'V')
   {
     printf("Anti-simétrica: V\n");
@@ -322,18 +358,7 @@ int main(int argc, char *argv[])
   else if (rpt_anti_simetrica == 'F')
   {
     printf("Anti-simétrica: F\n");
-    for (int i = 1; i <= linhas; i++)
-    {
-      for (int j = 1; j <= i; j++)
-      {
-        if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][i] == 1 && i != j)
-        {
-          printf("(%d,%d); (%d,%d); ", matriz_int_aloc[0][j], matriz_int_aloc[i][0],
-                 matriz_int_aloc[i][0], matriz_int_aloc[0][j]);
-        }
-      }
-    }
-    printf("\n");
+    imprimir_resposta(vetor_resposta, tam_res);
   }
   rpt_assimetrica = assimetrica(rpt_irreflexiva, rpt_anti_simetrica);
   if (rpt_assimetrica == 'V')
@@ -345,8 +370,7 @@ int main(int argc, char *argv[])
     printf("Assimétrica: F\n");
   }
 
-  rpt_transitiva = transitiva(matriz_int_aloc, linhas);
-  int vetorAuxTran[2] = {0, 0};
+  rpt_transitiva = transitiva(matriz_int_aloc, linhas, vetor_resposta, &tam_res);
   if (rpt_transitiva == 'V')
   {
     printf("Transitiva: V\n");
@@ -354,60 +378,25 @@ int main(int argc, char *argv[])
   else if (rpt_transitiva == 'F')
   {
     printf("Transitiva: F\n");
-    for (int z = 1; z <= linhas; z++)
-    {
-      for (int i = 1; i <= linhas; i++)
-      {
-        for (int j = 1; j <= linhas; j++)
-        {
-          if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
-          {
-            if (vetorAuxTran[0] != matriz_int_aloc[i][0])
-            {
-              printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
-              vetorAuxTran[0] = matriz_int_aloc[i][0];
-              vetorAuxTran[1] = matriz_int_aloc[0][z];
-            }
-            else if (vetorAuxTran[0] == matriz_int_aloc[i][0])
-            {
-              if (vetorAuxTran[1] != matriz_int_aloc[0][z])
-              {
-                printf("(%d,%d); ", matriz_int_aloc[i][0], matriz_int_aloc[0][z]);
-                vetorAuxTran[0] = matriz_int_aloc[i][0];
-                vetorAuxTran[1] = matriz_int_aloc[0][z];
-              }
-            }
-          }
-        }
-      }
-    }
-    printf("\n");
-    /* Como ela nao é transitiva, na impressão do fecho precisamos considerar elas,
-        além do que será analisado no fecho*/
-    for (int z = 1; z <= linhas; z++)
-    {
-      for (int i = 1; i <= linhas; i++)
-      {
-        for (int j = 1; j <= linhas; j++)
-        {
-          if (matriz_int_aloc[i][j] == 1 && matriz_int_aloc[j][z] == 1 && matriz_int_aloc[i][z] != 1)
-          {
-            matriz_int_aloc[i][z] = 1;
-          }
-        }
-      }
-    }
+    imprimir_resposta(vetor_resposta, tam_res);
   }
   if (rpt_reflexiva == 'V' && rpt_transitiva == 'V' && rpt_simetrica == 'V')
+  {
     printf("Relação de equivalência: V\n");
+  }
   else
+  {
     printf("Relação de equivalência: F\n");
+  }
 
   if (rpt_reflexiva == 'V' && rpt_transitiva == 'V' && rpt_anti_simetrica == 'V')
+  {
     printf("Relação de ordem parcial: V\n");
+  }
   else
+  {
     printf("Relação de ordem parcial: F\n");
-
+  }
   printf("Fecho transitivo da relação: ");
   for (int i = 1; i <= linhas; i++)
   {
@@ -419,11 +408,9 @@ int main(int argc, char *argv[])
       }
     }
   }
-
   if (rpt_transitiva == 'F')
   {
-    vetorAuxTran[0] = 0;
-    vetorAuxTran[1] = 0;
+    int vetorAuxTran[2] = {0, 0};
     for (int z = 1; z <= linhas; z++)
     {
       for (int i = 1; i <= linhas; i++)
@@ -453,7 +440,6 @@ int main(int argc, char *argv[])
     }
   }
   printf("\n");
-  fclose(arq);
   free_aloc_int(matriz_int_aloc, linhas);
   return 0;
 }
