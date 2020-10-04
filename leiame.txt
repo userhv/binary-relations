@@ -1,9 +1,0 @@
-    O TP foi testado e desenvolvido sob uma distribuição linux (Fedora 32) e com isso tem suporte ao sistema yum.
-    Além do arquivo "relacao.c" está incluido também a biblioteca "libmd.h", certifique-se de que os arquivos estejam todos na
-mesma pasta, caso contrário sem a biblioteca "libmd.h" o código não irá compilar.
-    A passagem do arquivo deve ser feita na hora de executar o codigo na linha de comando, tenha-se: ./meuprograma nomedoarquivo.txt
-    O algoritmo foi testado com no máximo 340 pares retornados no fecho transitivo, para além disso é necessário alterar
-        #define MAX 
-com um valor suficientemente grande que consiga comportar a seguinte operação: 2*(n²+n) onde n é o primeiro valor passado
-nos casos de teste.
-    Obs: Por uma questão de otimização os pares podem não estar em ordem.

@@ -1,5 +1,5 @@
-#ifndef MD_LIB
-#define MD_LIB
+#ifndef LIBMD
+#define LIBMD
 
 int **aloc_int(int);
 void free_aloc_int(int **, int);
@@ -10,6 +10,6 @@ char simetrica(int **, int, int *, int *);
 char anti_simetrica(int **, int, int *, int *);
 char assimetrica(char, char);
 char transitiva(int **, int, int *, int *);
-void imprimir(int *, int);
+void imprimir_resposta(int *, int);
 
 #endif
